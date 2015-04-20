@@ -3,6 +3,8 @@
 
 # For the board, (0, 0) is at the top left.
 # So, the bottom right would be (3, 3)
+import os
+
 board = [
     [' ', ' ', ' '],
     [' ', ' ', ' '],
@@ -18,16 +20,28 @@ class PlotException(Exception):
 # Functions used to draw on the board
 def plot(coor, playerid):
     """Plots a playerid to a coordinate (in a tuple)"""
-    if type(coor) is not iter:
-        PlotException('The coordinate given is not a tuple')
-        
+    if not hasattr(coor, '__iter__'):
+        raise PlotException('The coordinate given is not an iterable.')
+
+    if playerid is str:
+        raise PlotException('The coordinate cannot be a string.')
+
     if type(playerid) is not str:
-        PlotException('The player given is not a string')
+        raise PlotException('The player given is not a string.')
+
+    playerid = playerid.upper()
+
+    if playerid is not 'X' or playerid is not 'O':
+        raise PlotException('Invalid Input')
 
     x, y = coor
 
     board[x][y] = playerid
     return board
+
+
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 def pretty_print_board():
     """Prints a pretty version of the board"""
@@ -40,6 +54,15 @@ def pretty_print_board():
         print print_out % (space_list[0], space_list[1], space_list[2])
         if char is not board[2]:
             print "-" * 23
+
+def check_correct_mark(previnput, nextinput):
+    if nextinput is not 'X' or nextinput is not 'O':
+        raise PlotException('The input was not an X or O.')
+    if previnput is None:
+        return True
+    if previnput is nextinput:
+        return False
+    return True
 
 # Functions that determine if you won
 def win_row(playerid):
@@ -79,3 +102,12 @@ def win_diagonal(playerid):
         return (True, "Diagonal Right-up to Left-down")
 
     return None
+
+def reset_board():
+    global board
+    board = [
+        [' ', ' ', ' '],
+        [' ', ' ', ' '],
+        [' ', ' ', ' '],
+        ]
+    return board
