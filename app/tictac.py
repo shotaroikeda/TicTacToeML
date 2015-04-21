@@ -65,6 +65,23 @@ def check_correct_mark(previnput, nextinput):
     return True
 
 # Functions that determine if you won
+def check_win(playerid):
+    "Checks if the player won the game."
+
+    if playerid is not "X" or playerid is not "O":
+        raise PlotException('Not a valid player id')
+
+    if win_row(playerid):
+        return win_row(playerid)
+
+    if win_column(playerid):
+        return win_column(playerid)
+
+    if win_diagonal(playerid):
+        return win_diagonal(playerid)
+
+    return False
+    
 def win_row(playerid):
     """Determines if a player won with a row"""
     if board[0][0] is playerid and board[0][1] is playerid and board[0][2] is playerid:
@@ -76,7 +93,7 @@ def win_row(playerid):
     if board[2][0] is playerid and board[2][1] is playerid and board[2][2] is playerid:
         return (True, "Row 3")
 
-    return None
+    return False
 
     
 def win_column(playerid):
@@ -91,7 +108,7 @@ def win_column(playerid):
     if board[0][2] is playerid and board[1][2] is playerid and board[2][2] is playerid:
         return (True, "Column 3")
 
-    return None
+    return False
 
 def win_diagonal(playerid):
     """Determines if a player won with a diagonal"""
@@ -101,7 +118,7 @@ def win_diagonal(playerid):
     if board[0][2] is playerid and board[1][1] is playerid and board[2][0] is playerid:
         return (True, "Diagonal Right-up to Left-down")
 
-    return None
+    return False
 
 def reset_board():
     global board
